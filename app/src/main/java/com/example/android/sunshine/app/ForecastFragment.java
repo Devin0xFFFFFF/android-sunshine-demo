@@ -1,8 +1,11 @@
 package com.example.android.sunshine.app;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.JsonReader;
@@ -13,8 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +35,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -40,6 +46,13 @@ public class ForecastFragment extends Fragment {
     ArrayList<String> weekForecast;
 
     public ForecastFragment() {
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        updateWeather();
     }
 
     @Override
@@ -62,12 +75,21 @@ public class ForecastFragment extends Fragment {
 
         if(id == R.id.action_refresh)
         {
-            FetchWeatherTask task = new FetchWeatherTask();
-            task.execute("94043");
+            updateWeather();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateWeather()
+    {
+        FetchWeatherTask task = new FetchWeatherTask();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = preferences.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+
+        task.execute(location);
     }
 
     @Override
@@ -86,6 +108,19 @@ public class ForecastFragment extends Fragment {
         ListView listView = (ListView)rootView.findViewById(R.id.listview_forecast);
 
         listView.setAdapter(mForecastAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String forecast = mForecastAdapter.getItem(i);
+//                Toast toast = Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT);
+//                toast.show();
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                detailIntent.putExtra(Intent.EXTRA_TEXT, forecast);
+                startActivity(detailIntent);
+            }
+        });
 
         return rootView;
     }
@@ -126,22 +161,22 @@ public class ForecastFragment extends Fragment {
             final String DAYS = "cnt";
 
             String format = "json";
-            String units = "metric";
             int numDays = 7;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043,us&mode=json&units=metric&cnt=7&APPID=95548e604037e726eb4458a074729cea");
 
                 Uri uri = Uri.parse("http://api.openweathermap.org/data/2.5/forecast/daily").buildUpon()
                 .appendQueryParameter(QUERY, params[0])
                 .appendQueryParameter(MODE, format)
-                .appendQueryParameter(UNITS, units)
+                .appendQueryParameter(UNITS, "metric")
                 .appendQueryParameter(DAYS, Integer.toString(numDays))
                 .appendQueryParameter("APPID", "95548e604037e726eb4458a074729cea")
                 .build();
+
+                URL url = new URL(uri.toString());
 
 //                Log.v(LOG_TAG, "Built URI " + uri.toString());
 
@@ -220,11 +255,31 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            String unitType = sharedPrefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric));
+
+            if(unitType.equals(getString(R.string.pref_units_imperial)))
+            {
+                high = convertToFarenheit(high);
+                low = convertToFarenheit(low);
+            }
+            else if(!unitType.equals(getString(R.string.pref_units_metric)))
+            {
+                Log.d(LOG_TAG, "Unit type not found: " + unitType);
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
+        }
+
+        private double convertToFarenheit(double celsius)
+        {
+            return 1.8 * celsius + 32.00;
         }
 
         /**
