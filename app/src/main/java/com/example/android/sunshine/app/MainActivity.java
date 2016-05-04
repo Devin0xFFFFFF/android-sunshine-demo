@@ -6,15 +6,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.v(LOG_TAG, "onCreate");
+
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -70,5 +76,40 @@ public class MainActivity extends ActionBarActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        Log.v(LOG_TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop()
+    {
+        Log.v(LOG_TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onResume()
+    {
+        Log.v(LOG_TAG, "onResume");
+        super.onResume();
+    }
+
+    @Override
+    public void onStart()
+    {
+        Log.v(LOG_TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        Log.v(LOG_TAG, "onDestroy");
+        super.onDestroy();
     }
 }
