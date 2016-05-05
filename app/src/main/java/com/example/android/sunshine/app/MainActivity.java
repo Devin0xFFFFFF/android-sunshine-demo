@@ -15,16 +15,20 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static final String FORECASTFRAGMENT_TAG = "FORECAST_FRAGMENT";
+
+    private String mLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v(LOG_TAG, "onCreate");
+        mLocation = Utility.getPreferredLocation(this);
 
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -81,35 +85,42 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onPause()
     {
-        Log.v(LOG_TAG, "onPause");
         super.onPause();
     }
 
     @Override
     public void onStop()
     {
-        Log.v(LOG_TAG, "onStop");
         super.onStop();
     }
 
     @Override
     public void onResume()
     {
-        Log.v(LOG_TAG, "onResume");
         super.onResume();
+
+        String preferredLocation = Utility.getPreferredLocation(this);
+
+        if(preferredLocation != null && !preferredLocation.equals(mLocation))
+        {
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if(ff != null)
+            {
+                ff.onLocationChanged();
+            }
+            mLocation = preferredLocation;
+        }
     }
 
     @Override
     public void onStart()
     {
-        Log.v(LOG_TAG, "onStart");
         super.onStart();
     }
 
     @Override
     public void onDestroy()
     {
-        Log.v(LOG_TAG, "onDestroy");
         super.onDestroy();
     }
 }
