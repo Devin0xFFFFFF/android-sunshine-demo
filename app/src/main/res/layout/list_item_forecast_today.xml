@@ -3,29 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:layout_margin="16dp"
     android:minHeight="?android:attr/listPreferredItemHeight">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/list_item_icon"
-        android:src="@drawable/ic_launcher" />
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:minHeight="?android:attr/listPreferredItemHeight">
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Tomorrow"
+            android:text="Today, June 24"
             android:id="@+id/list_item_date_textview" />
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/list_item_high_textview" />
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8"
+            android:id="@+id/list_item_low_textview" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:minHeight="?android:attr/listPreferredItemHeight">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item_icon"
+            android:src="@drawable/ic_launcher" />
 
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
@@ -33,29 +58,6 @@
             android:text="Clear"
             android:id="@+id/list_item_forecast_textview" />
 
-        </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeight">
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="81"
-            android:id="@+id/list_item_high_textview" />
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:text="67"
-            android:id="@+id/list_item_low_textview" />
         </LinearLayout>
 
 </LinearLayout>

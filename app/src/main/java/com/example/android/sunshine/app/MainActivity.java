@@ -15,9 +15,10 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private static final String FORECASTFRAGMENT_TAG = "FORECAST_FRAGMENT";
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     private String mLocation;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +27,20 @@ public class MainActivity extends ActionBarActivity {
         mLocation = Utility.getPreferredLocation(this);
 
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
-                    .commit();
+
+        if(findViewById(R.id.weather_detail_container) != null)
+        {
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        }
+        else
+        {
+            mTwoPane = false;
         }
     }
 
@@ -103,11 +114,18 @@ public class MainActivity extends ActionBarActivity {
 
         if(preferredLocation != null && !preferredLocation.equals(mLocation))
         {
-            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             if(ff != null)
             {
                 ff.onLocationChanged();
             }
+
+            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if(df != null)
+            {
+                df.onLocationChanged(preferredLocation);
+            }
+
             mLocation = preferredLocation;
         }
     }

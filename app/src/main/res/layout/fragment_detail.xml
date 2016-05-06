@@ -1,14 +1,120 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context="com.example.android.sunshine.app.DetailActivity" tools:ignore="MergeRootFrame"
-    >
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:minHeight="?android:attr/listPreferredItemHeight"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center_vertical"
-        android:text="Today - Sunny - 88 / 63"
-        android:id="@+id/detail_text" />
-</FrameLayout>
+        android:layout_margin="16dp"
+        android:minHeight="?android:attr/listPreferredItemHeight">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical"
+            android:minHeight="?android:attr/listPreferredItemHeight">
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                android:text="Today, June 24"
+                android:id="@+id/detail_date_textview"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp"
+            android:minHeight="?android:attr/listPreferredItemHeight">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:minHeight="?android:attr/listPreferredItemHeight">
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="21"
+                    android:gravity="center"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Display3"
+                    android:id="@+id/detail_high_textview" />
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8"
+                    android:id="@+id/detail_low_textview"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:minHeight="?android:attr/listPreferredItemHeight">
+
+                <ImageView
+                    android:layout_width="73dp"
+                    android:layout_height="73dp"
+                    android:id="@+id/detail_icon"
+                    android:src="@drawable/ic_launcher" />
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear"
+                    android:id="@+id/detail_forecast_textview"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:minHeight="?android:attr/listPreferredItemHeight">
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Humidity: 84%"
+                android:id="@+id/detail_humidity_textview"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wind: 6km/H NW"
+                android:id="@+id/detail_wind_textview"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pressure: 1014 hPa"
+                android:id="@+id/detail_pressure_textview"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
