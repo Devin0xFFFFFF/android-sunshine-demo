@@ -63,6 +63,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_WEATHER_DEGREES = 8;
     static final int COL_WEATHER_ID = 9;
 
+    static final String DETAIL_URI = "URI";
+    public static final String POSITION = "POS";
+
     private String mForecastStr;
     private ShareActionProvider mShareActionProvider;
     private DetailViewHolder mViewHolder;
@@ -76,6 +79,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+        }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
@@ -138,14 +146,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-
-        if(intent == null || intent.getData() == null)
+        if(null == mUri)
         {
             return null;
         }
 
-        return new CursorLoader(getActivity(), intent.getData(),
+        return new CursorLoader(getActivity(), mUri,
                 DETAIL_COLUMNS, null, null, null);
     }
 
@@ -167,6 +173,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         String description = cursor.getString(COL_WEATHER_DESC);
         mViewHolder.descriptionView.setText(description);
+
+        mViewHolder.iconView.setContentDescription(description);
 
         boolean isMetric = Utility.isMetric(context);
 
