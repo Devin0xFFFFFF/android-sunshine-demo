@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
+
 
 public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
 
@@ -47,6 +49,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -69,45 +73,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             startActivity(settingsIntent);
             return true;
         }
-        else if(id == R.id.action_view_location)
-        {
-            showPreferredLocation();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showPreferredLocation()
-    {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String locationPref = preferences.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-
-        Uri locationUri = Uri.parse("geo:0,0").buildUpon()
-                .appendQueryParameter("q", locationPref)
-                .build();
-
-        showMap(locationUri);
-    }
-
-    private void showMap(Uri geoLocation) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
     }
 
     @Override

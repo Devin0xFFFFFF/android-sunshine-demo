@@ -1,12 +1,14 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,14 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.content.CursorLoader;
 
 import com.example.android.sunshine.app.data.WeatherContract;
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -61,6 +59,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LONG = 8;
 
     private static final String SELECTED_KEY = "SELECTED";
+    private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
     private ForecastAdapter mForecastAdapter;
     private int mPosition;
@@ -81,13 +80,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     public ForecastFragment() {
     }
-
-//    @Override
-//    public void onStart()
-//    {
-//        super.onStart();
-//        updateWeather();
-//    }
 
     @Override
     public void onActivityCreated(Bundle bundle)
@@ -114,9 +106,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     {
         int id = item.getItemId();
 
-        if(id == R.id.action_refresh)
+        if(id == R.id.action_view_location)
         {
-            updateWeather();
+            openPreferredLocationInMap();
             return true;
         }
 
@@ -125,12 +117,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void updateWeather()
     {
-        FetchWeatherTask task = new FetchWeatherTask(getActivity());
+        String location = Utility.getPreferredLocation(getActivity());
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = preferences.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-
-        task.execute(location);
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     @Override
@@ -233,6 +222,31 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if(mForecastAdapter != null)
         {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        }
+    }
+
+    private void openPreferredLocationInMap() {
+        // Using the URI scheme for showing a location found on a map.  This super-handy
+        // intent can is detailed in the "Common Intents" page of Android's developer site:
+        // http://developer.android.com/guide/components/intents-common.html#Maps
+        if ( null != mForecastAdapter ) {
+            Cursor c = mForecastAdapter.getCursor();
+            if ( null != c ) {
+                c.moveToPosition(0);
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+                Uri geoLocation = Uri.parse("geo:" + posLat + "," + posLong);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
+
         }
     }
 }
